@@ -12,6 +12,21 @@
 	<link href="/hyeri/resources/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 	<style>
 		.errorMsg {display:none;}
+		#back{
+			position: absolute;
+			z-index: 100;
+			background-color: #000000;
+			display:none;
+			left:0;
+			top:0;
+		}
+		#loadingBar{
+			position:absolute;
+			left:50%;
+			top: 40%;
+			display:none;
+			z-index:200;
+		}
 	</style>
 </head>
 <script>
@@ -102,6 +117,28 @@
 		}
 	}
 
+	//로딩바 생성
+	function fn_LoadingBarStart() {
+		var backHeight = $(document).height(); 				//뒷 배경의 상하 폭
+		var backWidth = window.document.body.clientWidth; 	//뒷 배경의 좌우 폭
+		var backGroundCover = "<div id='back'></div>"; 		//뒷 배경을 감쌀 커버
+		var loadingBarImage = ''; 							//가운데 띄워 줄 이미지
+
+		loadingBarImage += "<div id='loadingBar'>";
+		loadingBarImage += " <img src='/hyeri/resources/img/loadingbar.gif'/>"; 	//로딩 바 이미지
+		loadingBarImage += "</div>";
+		$('body').append(backGroundCover).append(loadingBarImage);
+		$('#back').css({ 'width': backWidth, 'height': backHeight, 'opacity': '0.3' });
+		$('#back').show();
+		$('#loadingBar').show();
+	}
+
+	//로딩바 제거
+	function fn_LoadingBarEnd() {
+		$('#back, #loadingBar').hide();
+		$('#back, #loadingBar').remove();
+	}
+
 	//회원가입
 	function fn_join(){
 		if( this.checkValidate() ) {
@@ -119,6 +156,10 @@
 							,"mmbrEmail" : $("#mmbrEmail").val()
 							}
 					,datatype:"json"
+					,beforeSend: function () {
+							fn_LoadingBarStart();} 	//로딩바 생성
+					, complete: function () {
+							fn_LoadingBarEnd();} 		//로딩바 제거
 					,success:function(result){
 							if("success" == result["msg"]){
 								alert("가입 요청이 완료되었습니다. \n메일 인증 후 로그인 바랍니다.");
