@@ -3,12 +3,27 @@
 <style>
 /*레이어 팝업 영역*/
 	.pstyle {
-	 display: none;
-	 position: relative;
-	 width: auto;
-	 border: 5px solid #fff;
-	 padding: 20px;
-	 background-color: #fff;
+		 display: none;
+		 position: relative;
+		 width: auto;
+		 border: 5px solid #fff;
+		 padding: 20px;
+		 background-color: #fff;
+	}
+	#back{
+		position: absolute;
+		z-index: 100;
+		background-color: #000000;
+		display:none;
+		left:0;
+		top:0;
+	}
+	#loadingBar{
+		position:absolute;
+		left:50%;
+		top: 40%;
+		display:none;
+		z-index:200;
 	}
 </style>
 <div id="popupFindPwd" class="pstyle">
@@ -40,6 +55,28 @@
 		fn_closePwd();
 	});
 
+	//로딩바 생성
+	function fn_LoadingBarStart() {
+		var backHeight = $(document).height(); 			//뒷 배경의 상하 폭
+		var backWidth = window.document.body.clientWidth; 	//뒷 배경의 좌우 폭
+		var backGroundCover = "<div id='back'></div>"; 		//뒷 배경을 감쌀 커버
+		var loadingBarImage = ''; 				//가운데 띄워 줄 이미지
+
+		loadingBarImage += "<div id='loadingBar'>";
+		loadingBarImage += " <img src='/hyeri/resources/img/loadingbar.gif'/>"; 	//로딩 바 이미지
+		loadingBarImage += "</div>";
+		$('body').append(backGroundCover).append(loadingBarImage);
+		$('#back').css({ 'width': backWidth, 'height': backHeight, 'opacity': '0.3' });
+		$('#back').show();
+		$('#loadingBar').show();
+	}
+
+	//로딩바 제거
+	function fn_LoadingBarEnd() {
+		$('#back, #loadingBar').hide();
+		$('#back, #loadingBar').remove();
+	}
+
 	//비밀번호 찾기
 	function fn_findPwd(){
 		var pwdId = $('#pwdLoginId').val();
@@ -57,6 +94,10 @@
 		        type:'POST',
 		        data: formObj,
 		        dataType : "json",
+		        beforeSend: function () {
+					fn_LoadingBarStart();}, 	//로딩바 생성
+				complete: function () {
+					fn_LoadingBarEnd();}, 		//로딩바 제거
 		        success:function(result){
 		        	var html = "";
 
