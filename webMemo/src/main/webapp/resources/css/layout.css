@@ -1,0 +1,10 @@
+.tbl_border { border-collapse: collapse; text-align: center;}
+.tbl_border td,th { border:1px solid black; }
+
+.ul_paging {list-style:none;}
+.li_paging {
+	 margin: 0px;
+	 padding: 0px 3px;
+	 border : 0px;
+	 float: left;
+}

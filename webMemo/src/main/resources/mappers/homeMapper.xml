@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.memo.hr.mapper.HomeMapper">
+
+
+	<insert id="insertMmbr" parameterType="MmbrVO">
+		/*homeMapper.insertMmbr*/
+		INSERT INTO
+			TBL_MMBR
+			(LOGIN_ID
+			,PWD
+			,MMBR_NM
+			,MMBR_SEX
+			,MMBR_BIRTH
+			,MMBR_TEL
+			,MMBR_EMAIL
+			,JOIN_DTTM
+			,MDF_DTTM
+			,AUTH_CD
+			,APPROVAL_KEY)
+		values
+			(#{loginId}
+			,#{pwd}
+			,#{mmbrNm}
+			,#{mmbrSex}
+			,#{mmbrBirth}
+			,#{mmbrTel}
+			,#{mmbrEmail}
+			,NOW()
+			,NOW()
+			,#{authCd}
+			,#{approvalKey})
+	</insert>
+
+	<select id="idCheck" parameterType="String" resultType="int">
+		SELECT
+			COUNT(LOGIN_ID)
+		FROM
+			TBL_MMBR
+		WHERE
+			LOGIN_Id=#{loginId}
+	</select>
+
+	<select id="emailCheck" parameterType="String" resultType="int">
+		SELECT
+			COUNT(MMBR_EMAIL)
+		FROM
+			TBL_MMBR
+		WHERE
+			MMBR_EMAIL=#{mmbrEmail}
+	</select>
+
+	<update id="updateApproval" parameterType="MmbrVO">
+		UPDATE
+			TBL_MMBR
+		SET
+			AUTH_CD = '02'
+		WHERE
+			MMBR_EMAIL = #{mmbrEmail}
+		AND APPROVAL_KEY = #{approvalKey}
+	</update>
+
+	<select id="selectMmbr" parameterType="MmbrVO" resultType="MmbrVO">
+		/*homeMapper.selectMmbr*/
+		SELECT
+			LOGIN_ID
+			,PWD
+			,MMBR_NM
+			,MMBR_SEX
+			,MMBR_BIRTH
+			,MMBR_TEL
+			,MMBR_EMAIL
+			,JOIN_DTTM
+			,MDF_DTTM
+			,AUTH_CD
+			,WTHDR_YN
+		FROM
+			TBL_MMBR
+		WHERE
+			LOGIN_ID=#{loginId}
+	</select>
+
+	<select id="selectIdList" parameterType="MmbrVO" resultType="MmbrVO">
+		/*homeMapper.findIdList*/
+		SELECT
+			LOGIN_ID
+		FROM
+			TBL_MMBR
+		WHERE
+			MMBR_NM = #{mmbrNm}
+		AND MMBR_BIRTH = #{mmbrBirth}
+		AND MMBR_TEL = #{mmbrTel}
+		AND WTHDR_YN = 'N'
+	</select>
+
+	<select id="selectIdforPwd" parameterType="MmbrVO" resultType="MmbrVO">
+		/*homeMapper.findPw*/
+		SELECT
+			LOGIN_ID
+		FROM
+			TBL_MMBR
+		WHERE
+			LOGIN_ID = #{loginId}
+		AND	MMBR_NM = #{mmbrNm}
+		AND MMBR_EMAIL = #{mmbrEmail}
+		AND WTHDR_YN = 'N'
+	</select>
+
+	<update id="updateMmbr" parameterType="MmbrVO">
+		/*homeMapper.updateMmbr*/
+		UPDATE
+			TBL_MMBR
+		SET
+			MDF_DTTM = NOW()
+			<if test="pwd != null and pwd != ''">
+			,PWD = #{pwd}
+			</if>
+			<if test="mmbrNm != null and mmbrNm != ''">
+			,MMBR_NM= #{mmbrNm}
+			</if>
+			<if test="mmbrSex != null and mmbrSex != ''">
+			,MMBR_SEX = #{mmbrSex}
+			</if>
+			<if test="mmbrBirth != null and mmbrBirth != ''">
+			,MMBR_BIRTH = #{mmbrBirth}
+			</if>
+			<if test="mmbrTel != null and mmbrTel != ''">
+			,MMBR_TEL = #{mmbrTel}
+			</if>
+			<if test="mmbrEmail != null and mmbrEmail != ''">
+			,MMBR_EMAIL = #{mmbrEmail}
+			</if>
+			<if test="wthdrYn != null and wthdrYn != ''">
+			,WTHDR_YN = #{wthdrYn}
+			</if>
+			<if test="authCd != null and authCd != ''">
+			,AUTH_CD = #{authCd}
+			</if>
+			<if test="approvalKey != null and approvalKey != ''">
+			,APPROVAL_KEY = #{approvalKey}
+			</if>
+		WHERE
+			LOGIN_ID = #{loginId}
+	</update>
+
+	<update id="updateMemoDeletion" parameterType="MmbrVO">
+		/*homeMapper.updateMemoDeletion*/
+		UPDATE
+			TBL_MEMO
+		SET
+			DEL_YN = 'Y'
+		WHERE
+			OWNER_ID = #{loginId}
+	</update>
+
+</mapper>

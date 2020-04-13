@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration
+ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+ "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<settings>
+        <setting name="jdbcTypeForNull" value="VARCHAR"/>           <!-- 파라메터가 Null일경우 VARCHAR형으로 설정 -->
+        <setting name="callSettersOnNulls" value="true"/>           <!-- 리턴결과의 컬럼값이 Null일경우에도 컬럼 헤더를 생성 -->
+
+        <setting name="cacheEnabled" value="true" />                <!-- 설정에서 각 mapper 에 설정된 캐시를 전역적으로 사용할지 말지에 대한 여부 -->
+        <setting name="lazyLoadingEnabled" value="false" />         <!-- 늦은 로딩을 사용할지에 대한 여부. 사용하지 않는다면 모두 즉시 로딩할 것이다. -->
+        <setting name="multipleResultSetsEnabled" value="true" />   <!-- 한개의 구문에서 여러개의 ResultSet 을 허용할지의 여부(드라이버가 해당 기능을 지원해야 함). -->
+        <setting name="useColumnLabel" value="true" />              <!-- 칼럼명 대신에 칼럼라벨을 사용. 드라이버마다 조금 다르게 작동한다. 문서와 간단한 테스트를 통해 실제 기대하는 것처럼 작동하는지 확인해야 한다. -->
+        <setting name="useGeneratedKeys" value="false" />           <!-- 생성키에 대한 JDBC 지원을 허용. 지원하는 드라이버가 필요하다. true 로 설정하면 생성키를 강제로 생성한다. 일부 드라이버(예를들면, Derby)에서는 이 설정을 무시한다. -->
+
+        <!--
+            SIMPLE : 특별히 하는 것이 없다.
+            REUSE  : PreparedStatement를 재사용한다.
+            BATCH  : 구문을 재사용하고 수정을 배치 처리한다.
+        -->
+        <setting name="defaultExecutorType" value="REUSE" />        <!-- 디폴트 실행자(executor) 설정 -->
+        <setting name="defaultStatementTimeout" value="25000" />    <!-- 데이터베이스로의 응답을 얼마나 오래 기다릴지를 판단하는 타임아웃을 셋팅 -->
+
+        <setting name="mapUnderscoreToCamelCase" value="true" />    <!-- 전통적인 데이터베이스 칼럼명 형태인 A_COLUMN을 CamelCase형태의 자바 프로퍼티명 형태인 aColumn으로 자동으로 매핑하도록 함 -->
+    </settings>
+
+	<typeAliases>
+		<package name="com.memo.hr"/>
+	</typeAliases>
+
+</configuration>

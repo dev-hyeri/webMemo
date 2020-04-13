@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC
+"-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.memo.hr.mapper.AdminMapper">
+
+	<select id="listMmbr" parameterType="MmbrVO" resultType="MmbrVO">
+		/*adminMapper.listMmbr*/
+		SELECT
+			LOGIN_ID
+			,MMBR_NM
+			,AUTH_CD
+			,(SELECT COUNT(MEMO_SN) FROM TBL_MEMO WHERE OWNER_ID = LOGIN_ID) AS MEMO_CNT
+		FROM
+			TBL_MMBR
+		WHERE
+			WTHDR_YN = 'N'
+		<if test='searchText != "" '>
+			<if test='searchType == "loginId"'>
+				AND LOGIN_ID LIKE CONCAT('%',#{searchText},'%')
+			</if>
+		</if>
+		ORDER BY
+			JOIN_DTTM DESC
+		<include refid="com.memo.hr.mapper.CommonMapper.pageFooter"/>
+	</select>
+
+    <select id="countMmbr" parameterType="MmbrVO" resultType="int">
+    	/*adminMapper.countMmbr*/
+    	SELECT
+    		COUNT(LOGIN_ID)
+    	FROM
+    		TBL_MMBR
+    	WHERE
+    		WTHDR_YN = 'N'
+    	<if test='searchText != "" '>
+			<if test='searchType == "loginId"'>
+				AND LOGIN_ID LIKE CONCAT('%',#{searchText},'%')
+			</if>
+		</if>
+    </select>
+
+	<select id="selectMmbr" parameterType="MmbrVO" resultType="MmbrVO">
+		/*adminMapper.selectMmbr*/
+		SELECT
+			LOGIN_ID
+			,(SELECT COUNT(MEMO_SN) FROM TBL_MEMO WHERE OWNER_ID = LOGIN_ID) AS MEMO_CNT
+			,MMBR_NM
+			,AUTH_CD
+			,MMBR_SEX
+			,MMBR_BIRTH
+			,MMBR_TEL
+			,MMBR_EMAIL
+			,JOIN_DTTM
+			,WTHDR_YN
+		FROM
+			TBL_MMBR
+		WHERE
+			LOGIN_ID=#{loginId}
+	</select>
+
+	<select id="listError" parameterType="ExceptionVO" resultType="ExceptionVO">
+		/*adminMapper.listError*/
+		SELECT
+			ERROR_SN
+			,EXCPT
+			,LOGIN_ID
+			,DATE_FORMAT(RGST_DTTM, '%y-%m-%d %H:%i:%s') RGST_DTTM
+		FROM
+			TBL_EXCPT_LOG
+		WHERE 1 = 1
+			<if test='searchText != "" '>
+				<if test='searchType == "loginId" '>
+					AND LOGIN_ID LIKE CONCAT('%',#{searchText},'%')
+				</if>
+			</if>
+		ORDER BY
+			RGST_DTTM DESC
+		<include refid="com.memo.hr.mapper.CommonMapper.pageFooter"/>
+	</select>
+
+	 <select id="countError" parameterType="ExceptionVO" resultType="int">
+	 	/*adminMapper.countError*/
+    	SELECT
+    		COUNT(ERROR_SN)
+    	FROM
+    		TBL_EXCPT_LOG
+    	WHERE 1 = 1
+    	<if test='searchText != "" '>
+			<if test='searchType == "loginId" '>
+				AND LOGIN_ID LIKE CONCAT('%',#{searchText},'%')
+			</if>
+		</if>
+    </select>
+
+	<select id="selectError" parameterType="ExceptionVO" resultType="ExceptionVO">
+		/*adminMapper.selectError*/
+		SELECT
+			ERROR_SN
+			,EXCPT
+			,CNTNT
+			,LOGIN_ID
+			,DATE_FORMAT(RGST_DTTM, '%y-%m-%d %H:%i:%s') RGST_DTTM
+		FROM
+			TBL_EXCPT_LOG
+		WHERE
+			ERROR_SN=#{errorSn}
+	</select>
+
+	<delete id="deleteError" parameterType="int">
+		/*adminMapper.deleteError*/
+		DELETE
+			FROM
+				TBL_EXCPT_LOG
+			WHERE
+				ERROR_SN = #{errorSn}
+	</delete>
+
+</mapper>
